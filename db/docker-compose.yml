@@ -1,0 +1,24 @@
+version: '3.9'
+
+services:
+  mysql:
+    image: mysql:8.0.27
+    # container_name: todo-mysql
+    command: --default-authentication-plugin=mysql_native_password
+    ports:
+      - "13306:3306"
+    environment:
+      MYSQL_ROOT_PASSWORD: mysql
+      MYSQL_DATABASE: todo
+      MYSQL_USER: user
+      MYSQL_PASSWORD: password
+    volumes:
+      # 永続化データマウント先
+      - data-volume:/var/lib/mysql
+      # 設定ファイル
+      - ./conf/my.cnf:/etc/mysql/conf.d/my.cnf
+      # 初期データ
+      - ./sql/:/docker-entrypoint-initdb.d
+
+volumes:
+  data-volume:

@@ -5,6 +5,7 @@ import (
 	"fmt"
 	"net/http"
 	"os"
+	"strconv"
 	"time"
 
 	"go-api/models"
@@ -26,7 +27,7 @@ func main() {
 
 	router := gin.New()
 
-	// CROSS ORIGINの設定
+	// CROSS ORIGIN
 	router.Use(func(c *gin.Context) {
 		c.Writer.Header().Set("Access-Control-Allow-Origin", "*")
 		c.Writer.Header().Set("Access-Control-Allow-Credentials", "true")
@@ -40,12 +41,12 @@ func main() {
 		c.Next()
 	})
 
-	// 存在しないページアクセスの設定
+	// 404
 	router.NoRoute(func(c *gin.Context) {
 		c.JSON(404, gin.H{"code": "PAGE_NOT_FOUND", "message": "Page not found"})
 	})
 
-	// 一覧表示
+	// list all TODO.
 	router.GET("/todo", func(c *gin.Context) {
 		result := models.FindAll(db)
 		fmt.Println(result)
@@ -54,7 +55,7 @@ func main() {
 		})
 	})
 
-	// 新規作成
+	// create new TODO.
 	router.POST("/todo", func(c *gin.Context) {
 		var todo TodoRequest
 		if err := c.ShouldBindJSON(&todo); err != nil {
@@ -67,9 +68,37 @@ func main() {
 		}
 		models.Add(db, todo.Title, todo.Body)
 		c.JSON(200, gin.H{
-			"result": "result",
+			"result": "created.",
 		})
 	})
+
+	// update TODO.
+	router.POST("/todo/:id", func(c *gin.Context) {
+		var todo TodoRequest
+		if err := c.ShouldBindJSON(&todo); err != nil {
+			c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
+			return
+		}
+		if err := isValidRequest(todo); err != nil {
+			c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
+			return
+		}
+		id, err := strconv.Atoi(c.Param("id"))
+		if err != nil {
+			c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
+			return
+		}
+		err = models.Edit(db, id, todo.Title, todo.Body)
+		if err != nil {
+			c.JSON(http.StatusInternalServerError, gin.H{"error": err.Error()})
+			return
+		}
+		c.JSON(200, gin.H{
+			"result": "updated.",
+		})
+	})
+
+	// listen.
 	router.Run(":3000")
 }
 
@@ -79,6 +108,14 @@ func isValidRequest(todo TodoRequest) error {
 	}
 	if todo.Body == "" {
 		return errors.New("body required.")
+	}
+	return nil
+}
+
+func isValidId(id_str string) error {
+	_, err := strconv.Atoi(id_str)
+	if err != nil {
+		return errors.New("id invalid.")
 	}
 	return nil
 }

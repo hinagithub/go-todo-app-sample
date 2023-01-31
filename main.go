@@ -1,7 +1,9 @@
 package main
 
 import (
+	"errors"
 	"fmt"
+	"net/http"
 	"os"
 	"time"
 
@@ -12,9 +14,12 @@ import (
 	"github.com/jmoiron/sqlx"
 )
 
-func main() {
+type TodoRequest struct {
+	Title string `json:"title"`
+	Body  string `json:"body"`
+}
 
-	fmt.Println("test env : ", os.Getenv("env"))
+func main() {
 
 	db := connectDb()
 	defer db.Close()
@@ -40,14 +45,42 @@ func main() {
 		c.JSON(404, gin.H{"code": "PAGE_NOT_FOUND", "message": "Page not found"})
 	})
 
+	// 一覧表示
 	router.GET("/todo", func(c *gin.Context) {
-		result := models.GetAll(db)
+		result := models.FindAll(db)
 		fmt.Println(result)
 		c.JSON(200, gin.H{
 			"result": result,
 		})
 	})
+
+	// 新規作成
+	router.POST("/todo", func(c *gin.Context) {
+		var todo TodoRequest
+		if err := c.ShouldBindJSON(&todo); err != nil {
+			c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
+			return
+		}
+		if err := isValidRequest(todo); err != nil {
+			c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
+			return
+		}
+		models.Add(db, todo.Title, todo.Body)
+		c.JSON(200, gin.H{
+			"result": "result",
+		})
+	})
 	router.Run(":3000")
+}
+
+func isValidRequest(todo TodoRequest) error {
+	if todo.Title == "" {
+		return errors.New("title required.")
+	}
+	if todo.Body == "" {
+		return errors.New("body required.")
+	}
+	return nil
 }
 
 func connectDb() *sqlx.DB {

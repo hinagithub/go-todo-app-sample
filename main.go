@@ -98,6 +98,23 @@ func main() {
 		})
 	})
 
+	// delete TODO.
+	router.DELETE("/todo/:id", func(c *gin.Context) {
+		id, err := strconv.Atoi(c.Param("id"))
+		if err != nil {
+			c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
+			return
+		}
+		err = models.Delete(db, id)
+		if err != nil {
+			c.JSON(http.StatusInternalServerError, gin.H{"error": err.Error()})
+			return
+		}
+		c.JSON(200, gin.H{
+			"result": "deleted.",
+		})
+	})
+
 	// listen.
 	router.Run(":3000")
 }

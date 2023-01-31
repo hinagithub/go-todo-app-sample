@@ -5,6 +5,10 @@ import (
 	"time"
 )
 
+func Now() string {
+	return time.Now().Format("2006-01-02 15:04:05")
+}
+
 func Str2int(str string) int64 {
 	int, err := strconv.Atoi(str)
 	if err != nil {

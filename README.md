@@ -1,21 +1,36 @@
-CRUD操作の基本を確認するためのTODOアプリケーション
+CRUD 操作の基本を確認するための TODO アプリケーション
 
-## MySQL起動
+## MySQL 起動
+
+db ディレクトリに移動し Docker 起動
+
 ```
+cd db
 docker compose up -d
 ```
 
-## GoWebサーバの開始
+## .env の読み込み
+
+```
+source .env
+```
+
+## GoWeb サーバの開始
+
+ルートディレクトリで run する
+
 ```
 go run main.go
 ```
 
-## リクエスト
+## リクエスト例
+
 ```
 curl localhost:3000/todo
 ```
 
-##　レスポンス例
+## レスポンス例
+
 ```
 {
     "result":[

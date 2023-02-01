@@ -1,0 +1,37 @@
+{{template "header" .}}
+<div class="row">
+  <div class="col-xs-10">
+    <div class="card" style="">
+      <img src="/assets/image/main.jpeg" class="card-img-top" alt="..." />
+      <div class="card-body">
+        <h5 class="card-title">TODO sample</h5>
+        <p class="card-text">Go言語の勉強のために作ってみたTODOリスト</p>
+      </div>
+      <ul class="list-group list-group-flush">
+        {{range $n, $item := .Data}}
+        <li class="list-group-item">
+          <div class="row">
+            <div class="col-9">{{$item.Body}}</div>
+            <div class="col-3">
+              {{if $item.Completed}}
+              <button class="btn btn-primary btn-sm" type="submit" disabled>
+                complete
+              </button>
+              {{else}}
+              <button class="btn btn-primary btn-sm" type="submit">
+                complete
+              </button>
+              {{end}}
+            </div>
+          </div>
+        </li>
+        {{end}}
+      </ul>
+      <div class="card-body">
+        <a href="#" class="card-link">Code (GitHub)</a>
+        <a href="#" class="card-link">Another</a>
+      </div>
+    </div>
+  </div>
+</div>
+{{template "footer" .}}

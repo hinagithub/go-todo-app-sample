@@ -1,6 +1,7 @@
 package main
 
 import (
+	"embed"
 	"errors"
 	"fmt"
 	"net/http"
@@ -16,9 +17,11 @@ import (
 )
 
 type TodoRequest struct {
-	Title string `json:"title"`
-	Body  string `json:"body"`
+	Completed bool   `json:"completed"`
+	Body      string `json:"body"`
 }
+
+var f embed.FS
 
 func main() {
 
@@ -26,6 +29,13 @@ func main() {
 	defer db.Close()
 
 	router := gin.New()
+
+	// HTML
+	router.LoadHTMLGlob("templates/*.html")
+
+	// Image
+	router.Static("assets", "./assets")
+	fmt.Println()
 
 	// CROSS ORIGIN
 	router.Use(func(c *gin.Context) {
@@ -43,15 +53,16 @@ func main() {
 
 	// 404
 	router.NoRoute(func(c *gin.Context) {
-		c.JSON(404, gin.H{"code": "PAGE_NOT_FOUND", "message": "Page not found"})
+		fmt.Println("Page not exists.")
+		c.HTML(http.StatusNotFound, "notfound.html", nil)
 	})
 
 	// list all TODO.
 	router.GET("/todo", func(c *gin.Context) {
 		result := models.FindAll(db)
 		fmt.Println(result)
-		c.JSON(200, gin.H{
-			"result": result,
+		c.HTML(http.StatusOK, "index.html", gin.H{
+			"Data": result,
 		})
 	})
 
@@ -66,7 +77,7 @@ func main() {
 			c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
 			return
 		}
-		models.Add(db, todo.Title, todo.Body)
+		models.Add(db, todo.Completed, todo.Body)
 		c.JSON(200, gin.H{
 			"result": "created.",
 		})
@@ -88,7 +99,7 @@ func main() {
 			c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
 			return
 		}
-		err = models.Edit(db, id, todo.Title, todo.Body)
+		err = models.Edit(db, id, todo.Completed, todo.Body)
 		if err != nil {
 			c.JSON(http.StatusInternalServerError, gin.H{"error": err.Error()})
 			return
@@ -120,9 +131,6 @@ func main() {
 }
 
 func isValidRequest(todo TodoRequest) error {
-	if todo.Title == "" {
-		return errors.New("title required.")
-	}
 	if todo.Body == "" {
 		return errors.New("body required.")
 	}

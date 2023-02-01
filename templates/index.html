@@ -1,11 +1,27 @@
 {{template "header" .}}
+
 <div class="row">
   <div class="col-xs-10">
     <div class="card" style="">
       <img src="/assets/image/main.jpeg" class="card-img-top" alt="..." />
       <div class="card-body">
-        <h5 class="card-title">TODO sample</h5>
-        <p class="card-text">Go言語の勉強のために作ってみたTODOリスト</p>
+        <div class="row">
+          <div class="col-12">
+            <h5 class="card-title">TODO sample</h5>
+          </div>
+          <div class="col-9">
+            <p class="card-text">Go言語の勉強のために作ってみたTODOリスト</p>
+          </div>
+          <div class="col-3">
+            <button
+              id="add-btn"
+              type="button"
+              class="btn text-nowrap btn-sm text-decoration-underline"
+            >
+              Add item
+            </button>
+          </div>
+        </div>
       </div>
       <ul class="list-group list-group-flush">
         {{range $n, $item := .Data}}

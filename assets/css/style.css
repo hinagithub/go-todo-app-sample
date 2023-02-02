@@ -3,6 +3,43 @@ body {
   font-family: "Noto Sans JP", sans-serif;
 }
 
+input {
+  
+  border-top-style: hidden;
+  border-right-style: hidden;
+  border-left-style: hidden;
+  border-color: white;
+  border-bottom-style: groove;
+  background-color: #eee;
+}
+
 .btn {
-  background-color: mediumpurple;
+  /* background-color: #d8bfd8;
+  border-color: white; */
+}
+
+/* モーダル */
+
+.modal{
+  display:none;
+}
+.modal.on{
+  display:block;
+}
+
+/* オーバーレイ */
+.overlay {
+  position: fixed;
+  top: 0;
+  z-index: 1001;
+  width: 100vw;
+  height: 100vh;
+  background: rgba(0, 0, 0, 0.6);
+  transition: all 0.5s ease-out;
+  visibility: hidden; 
+  opacity: 0;
+}
+.overlay.on {
+  visibility: visible; 
+  opacity: 1;
 }

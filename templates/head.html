@@ -15,39 +15,42 @@
       href="https://fonts.googleapis.com/css2?family=Noto+Sans+JP:wght@300&display=swap"
       rel="stylesheet"
     />
+    <link rel="stylesheet" href="/assets/css/style.css">
+
+    
   </header>
-  <body class="container">
-    <!-- modal -->
-    <div id="modal" class="modal-open" tabindex="-1">
-      <div class="modal-dialog">
-        <div class="modal-content">
-          <div class="modal-header">
-            <h5 class="modal-title">Modal title</h5>
-            <button
-              type="button"
-              class="btn-close"
-              data-bs-dismiss="modal"
-              aria-label="Close"
-            ></button>
-          </div>
-          <div class="modal-body">
-            <p>Modal body text goes here.</p>
-          </div>
-          <div class="modal-footer">
-            <button
-              type="button"
-              class="btn btn-secondary"
-              data-bs-dismiss="modal"
-            >
-              Close
-            </button>
-            <button type="button" class="btn btn-primary">Save changes</button>
+  <body>
+    <div class="overlay"></div>
+      <div class="container">
+        <!-- modal -->
+        <div class="modal" tabindex="-1">
+          <div class="modal-dialog">
+            <div class="modal-content">
+              <div class="modal-body">
+                <h5 class="modal-title">新規作成/編集</h5>
+                <form>
+                  <div class="mb-3">
+                    <label for="todo-text" class="form-label">TODO</label>
+                    <input type="todo-text" class="form-control" id="todo-text" >
+                  </div>
+                </form>
+                <div class="d-flex flex-row-reverse">
+                  <button id="save-bnt" type="submit" class="btn btn-primary btn-sm mx-1">
+                    Save
+                  </button>
+                  <button
+                    id="close-btn"
+                    type="button"
+                    class="btn btn-secondary btn-sm mx-1"
+                    data-bs-dismiss="modal"
+                  >
+                    Close
+                  </button>
+                </div>
+              </div>
+            </div>
           </div>
         </div>
-      </div>
-    </div>
-    <!-- modal end -->
-    <h1 class="display-4 mb-4 text-content">{{.Title}}</h1>
-    {{ end }}
-  </body>
-</html>
+        <!-- modal end -->
+        <h1 class="display-4 mb-4 text-content">{{.Title}}</h1>
+        {{ end }}

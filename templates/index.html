@@ -1,5 +1,6 @@
 {{template "header" .}}
 
+<!-- modal end -->
 <div class="row">
   <div class="col-xs-10">
     <div class="card" style="">
@@ -30,14 +31,14 @@
             {{if $item.Completed}}
             <div class="col-9 text-secondary">{{$item.Body}}</div>
             <div class="col-3">
-              <button class="btn btn-primary btn-sm" type="submit" disabled>
+              <button id="complete-btn" class="btn btn-primary btn-sm" type="submit" disabled>
                 complete
               </button>
             </div>
             {{else}}
             <div class="col-9">{{$item.Body}}</div>
             <div class="col-3">
-              <button class="btn btn-primary btn-sm" type="submit">
+              <button class="btn btn-primary btn-sm" type="submit" onclick="update('{{$item.ID}}', true, '{{$item.Body}}')">
                 complete
               </button>
             </div>

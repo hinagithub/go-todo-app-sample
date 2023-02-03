@@ -30,18 +30,21 @@
         <li class="list-group-item">
           <div class="row">
             {{if $item.Completed}}
-            <div class="col-9 text-secondary" onclick="showEditModal('{{$item.ID}}')">{{$item.Body}}</div>
+            <div class="col-8 text-secondary" onclick="showEditModal('{{$item.ID}}', '{{$item.Body}}')">{{$item.Body}}</div>
             <div class="col-3">
-              <button id="complete-btn" class="btn btn-primary btn-sm" type="submit" disabled>
+            </div>
+            <div class="col-1 d-flex align-items-center" onclick="remove('{{$item.ID}}')">
+              <i class="fa fa-times" aria-hidden="true"></i>
+            </div>
+            {{else}}
+            <div class="col-8" onclick="showEditModal('{{$item.ID}}', '{{$item.Body}}')">{{$item.Body}}</div>
+            <div class="col-3">
+              <button class="btn text-nowrap btn-sm text-decoration-underline" type="submit" onclick="complete('{{$item.ID}}','{{$item.Body}}')">
                 complete
               </button>
             </div>
-            {{else}}
-            <div class="col-9">{{$item.Body}}</div>
-            <div class="col-3">
-              <button class="btn btn-primary btn-sm" type="submit" onclick="complete('{{$item.ID}}','{{$item.Body}}')">
-                complete
-              </button>
+            <div class="col-1 d-flex align-items-center" onclick="remove('{{$item.ID}}')">
+              <i class="fa fa-times" aria-hidden="true"></i>
             </div>
             {{end}}
           </div>

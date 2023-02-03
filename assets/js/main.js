@@ -17,17 +17,35 @@ const overlay = document.querySelector('.overlay')
 // modal領域
 const modal = document.querySelector('.modal')
 
-// モーダルを開く関数
-const showModal = () => {
-  console.log("クリック");
+// modalタイトル
+const modalTitle = document.getElementById("modal-title")
+
+
+// 新規モーダルを開く関数
+const showCreateModal = () => {
   overlay.classList.add('on');
   modal.classList.add('on');
+  modalTitle.innerHTML='新規作成'
+  const todoId = document.getElementById('todo-id')
+  todoId.value=null
+
 }
+
+// 編集モーダルを開く関数
+const showEditModal = (id) => {
+  overlay.classList.add('on');
+  modal.classList.add('on');
+  modalTitle.innerHTML='編集 ID:' + id
+  const todoId = document.getElementById('todo-id')
+  todoId.value=id
+}
+
 
 // モーダルを閉じる関数
 const closeModal = () => {
   overlay.classList.remove('on');
   modal.classList.remove('on');
+  modalTitle.innerHTML=''
 }
 
 // 新規登録関数
@@ -53,15 +71,15 @@ const create = ()=>{
 }
 
 // 編集関数
-const update = (id, completed, text)=>{
-  console.log("完了ボタンクリック ID:",id, ' completed: ', completed, ' text:',text)
+const update = (id)=>{  
+  const text = document.getElementById("todo-text").value
   fetch("http://localhost:3000/todo/" + id,{
     method: "POST",
     headers: {
       'Content-Type': 'application/json'
     },
     body: JSON.stringify({
-      completed,
+      completed: false,
       body:text,
     })
   })
@@ -75,19 +93,36 @@ const update = (id, completed, text)=>{
   });
 }
 
-// 追加ボタンがクリックされた時
-addBtn.addEventListener('click', showModal)
+// 完了済みにする
+const complete = (id, text)=>{
+  console.log(id, TextDecoderStream)
+  fetch("http://localhost:3000/todo/" + id,{
+    method: "POST",
+    headers: {
+      'Content-Type': 'application/json'
+    },
+    body: JSON.stringify({
+      completed: true,
+      body:text,
+    })
+  })
+  .then((response) => {
+    closeModal()
+    location.reload()
+  })
+  .catch((error) => {
+    console.log("update失敗")
+    closeModal()  
+  });
+}
 
-// 閉じるボタンがクリックされた時
-closeBtn.addEventListener('click', closeModal)
+const save =()=>{
+  const todoId = document.getElementById('todo-id').value
+  if(todoId) update(todoId)
+  else create()
+}
 
 // モーダル枠外がクリックされた時
 modal.addEventListener('click', (event) => {
   if(event.target.closest('.modal-dialog') === null) closeModal()
 })
-
-// 保存ボタンがクリックされた時
-saveBtn.addEventListener('click', create)
-
-// 完了ボタンが押された時
-completeBtn.addEventListener('click', update)

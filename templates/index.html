@@ -18,6 +18,7 @@
               id="add-btn"
               type="button"
               class="btn text-nowrap btn-sm text-decoration-underline"
+              onclick="showCreateModal()"
             >
               Add item
             </button>
@@ -29,7 +30,7 @@
         <li class="list-group-item">
           <div class="row">
             {{if $item.Completed}}
-            <div class="col-9 text-secondary">{{$item.Body}}</div>
+            <div class="col-9 text-secondary" onclick="showEditModal('{{$item.ID}}')">{{$item.Body}}</div>
             <div class="col-3">
               <button id="complete-btn" class="btn btn-primary btn-sm" type="submit" disabled>
                 complete
@@ -38,7 +39,7 @@
             {{else}}
             <div class="col-9">{{$item.Body}}</div>
             <div class="col-3">
-              <button class="btn btn-primary btn-sm" type="submit" onclick="update('{{$item.ID}}', true, '{{$item.Body}}')">
+              <button class="btn btn-primary btn-sm" type="submit" onclick="complete('{{$item.ID}}','{{$item.Body}}')">
                 complete
               </button>
             </div>

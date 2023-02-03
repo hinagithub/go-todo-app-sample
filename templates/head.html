@@ -25,10 +25,11 @@
           <div class="modal-dialog">
             <div class="modal-content">
               <div class="modal-body">
-                <h5 class="modal-title">新規作成/編集</h5>
+                <h5 class="modal-title" id="modal-title">新規作成/編集</h5>
                 <form>
                   <div class="mb-3">
                     <label for="todo-text" class="form-label">TODO</label>
+                    <input type="hidden" value="null" id="todo-id">
                     <input type="todo-text" class="form-control" id="todo-text" >
                   </div>
                 </form>
@@ -37,6 +38,7 @@
                     id="save-bnt"
                     type="submit" 
                     class="btn btn-primary btn-sm mx-1"
+                    onclick="save()"
                   >
                     Save
                   </button>
@@ -45,6 +47,7 @@
                     type="button"
                     class="btn btn-secondary btn-sm mx-1"
                     data-bs-dismiss="modal"
+                    onclick="closeModal()"
                   >
                     Close
                   </button>

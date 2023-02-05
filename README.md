@@ -35,7 +35,7 @@ docker compose up -d
 source .env
 ```
 
-### GoWeb サーバの開始
+### サーバの開始
 
 ルートディレクトリで run する
 
@@ -43,7 +43,7 @@ source .env
 go run main.go
 ```
 
-###　ブラウザで以下にアクセス
+### ブラウザで以下にアクセス
 
 ```
 localhost:3000/todo

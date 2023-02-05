@@ -1,0 +1,56 @@
+@import url("https://fonts.googleapis.com/css2?family=Noto+Sans+JP&display=swap");
+body {
+  font-family: "Noto Sans JP", sans-serif;
+}
+
+input {
+  
+  border-top-style: hidden;
+  border-right-style: hidden;
+  border-left-style: hidden;
+  border-color: white;
+  border-bottom-style: groove;
+  background-color: #eee;
+}
+
+/* TODOリスト行 */
+li.item-row{
+  height: 50px;
+}
+
+/* ボタン */
+.btn {
+  color:darkslateblue;
+}
+
+/* モーダル */
+
+.modal{
+  display:none;
+}
+.modal.on{
+  display:block;
+}
+
+/* オーバーレイ */
+.overlay {
+  position: fixed;
+  top: 0;
+  z-index: 1001;
+  width: 100vw;
+  height: 100vh;
+  background: rgba(0, 0, 0, 0.6);
+  transition: all 0.5s ease-out;
+  visibility: hidden; 
+  opacity: 0;
+}
+.overlay.on {
+  visibility: visible; 
+  opacity: 1;
+}
+
+/* リンク */
+a {
+  color:pink;
+}
+

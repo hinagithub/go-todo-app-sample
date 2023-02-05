@@ -50,6 +50,8 @@ const closeModal = () => {
   overlay.classList.remove('on');
   modal.classList.remove('on');
   modalTitle.innerHTML=''
+  modalTodoText.value = ''
+
 }
 
 // 新規作成

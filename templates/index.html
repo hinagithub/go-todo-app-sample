@@ -2,16 +2,17 @@
 
 <!-- modal end -->
 <div class="row">
-  <div class="col-xs-10">
-    <div class="card" style="">
-      <img src="/assets/image/main.jpeg" class="card-img-top" alt="..." />
+  <div class="col"></div>
+  <div class="col-12">
+    <div class="card">
+      <img src="/assets/image/main.jpeg" class="img-fluid card-img-top" alt="..." />
       <div class="card-body">
         <div class="row">
           <div class="col-12">
             <h5 class="card-title">TODO sample</h5>
           </div>
           <div class="col-9">
-            <p class="card-text">Go言語の勉強のために作ってみたTODOリスト</p>
+            <small><p class="card-text text-black-50">Go言語の勉強のために作ってみたTODOリスト</p></small>
           </div>
           <div class="col-3">
             <button
@@ -27,7 +28,7 @@
       </div>
       <ul class="list-group list-group-flush">
         {{range $n, $item := .Data}}
-        <li class="list-group-item">
+        <li class="list-group-item item-row">
           <div class="row">
             {{if $item.Completed}}
             <div class="col-8 text-secondary" onclick="showEditModal('{{$item.ID}}', '{{$item.Body}}')">{{$item.Body}}</div>
@@ -51,11 +52,9 @@
         </li>
         {{end}}
       </ul>
-      <div class="card-body">
-        <a href="#" class="card-link">Code (GitHub)</a>
-        <a href="#" class="card-link">Another</a>
-      </div>
+
     </div>
   </div>
+  <div class="col"></div>
 </div>
 {{template "footer" .}}

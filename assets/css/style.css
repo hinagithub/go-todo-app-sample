@@ -13,9 +13,14 @@ input {
   background-color: #eee;
 }
 
+/* TODOリスト行 */
+li.item-row{
+  height: 50px;
+}
+
+/* ボタン */
 .btn {
-  /* background-color: #d8bfd8;
-  border-color: white; */
+  color:darkslateblue;
 }
 
 /* モーダル */
@@ -43,3 +48,9 @@ input {
   visibility: visible; 
   opacity: 1;
 }
+
+/* リンク */
+a {
+  color:pink;
+}
+

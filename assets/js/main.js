@@ -62,7 +62,7 @@ const create = ()=>{
     headers: {
       'Content-Type': 'application/json'
     },
-    body: JSON.stringify({body:text})
+    body: JSON.stringify({ completed: false, body: text })
   })
   .then((response) => {
     closeModal()

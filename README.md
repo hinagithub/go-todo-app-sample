@@ -43,22 +43,9 @@ source .env
 go run main.go
 ```
 
-### APIリクエスト例
+###　ブラウザで以下にアクセス
 
 ```
-curl localhost:3000/todo
+localhost:3000/todo
 ```
 
-### APIレスポンス例
-
-```
-{
-    "result":[
-        {
-            "ID":1,
-            "Title":"wash",
-            "Body":"toilet"
-        }
-    ]
-}
-```

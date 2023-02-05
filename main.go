@@ -1,8 +1,12 @@
 package main
 
 import (
+	"embed"
+	"errors"
 	"fmt"
+	"net/http"
 	"os"
+	"strconv"
 	"time"
 
 	"go-api/models"
@@ -12,16 +16,28 @@ import (
 	"github.com/jmoiron/sqlx"
 )
 
-func main() {
+type TodoRequest struct {
+	Completed bool   `json:"completed"`
+	Body      string `json:"body"`
+}
 
-	fmt.Println("test env : ", os.Getenv("env"))
+var f embed.FS
+
+func main() {
 
 	db := connectDb()
 	defer db.Close()
 
 	router := gin.New()
 
-	// CROSS ORIGINの設定
+	// HTML
+	router.LoadHTMLGlob("templates/*.html")
+
+	// Image
+	router.Static("assets", "./assets")
+	fmt.Println()
+
+	// CROSS ORIGIN
 	router.Use(func(c *gin.Context) {
 		c.Writer.Header().Set("Access-Control-Allow-Origin", "*")
 		c.Writer.Header().Set("Access-Control-Allow-Credentials", "true")
@@ -35,19 +51,98 @@ func main() {
 		c.Next()
 	})
 
-	// 存在しないページアクセスの設定
+	// 404
 	router.NoRoute(func(c *gin.Context) {
-		c.JSON(404, gin.H{"code": "PAGE_NOT_FOUND", "message": "Page not found"})
+		fmt.Println("Page not exists.")
+		c.HTML(http.StatusNotFound, "notfound.html", nil)
 	})
 
+	// list all TODO.
 	router.GET("/todo", func(c *gin.Context) {
-		result := models.GetAll(db)
+		result := models.FindAll(db)
 		fmt.Println(result)
-		c.JSON(200, gin.H{
-			"result": result,
+		c.HTML(http.StatusOK, "index.html", gin.H{
+			"Data": result,
 		})
 	})
+
+	// create new TODO.
+	router.POST("/todo", func(c *gin.Context) {
+		var todo TodoRequest
+		if err := c.ShouldBindJSON(&todo); err != nil {
+			c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
+			return
+		}
+		if err := isValidRequest(todo); err != nil {
+			c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
+			return
+		}
+		models.Add(db, todo.Completed, todo.Body)
+		c.JSON(200, gin.H{
+			"result": "created.",
+		})
+	})
+
+	// update TODO.
+	router.POST("/todo/:id", func(c *gin.Context) {
+		var todo TodoRequest
+		if err := c.ShouldBindJSON(&todo); err != nil {
+			c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
+			return
+		}
+		if err := isValidRequest(todo); err != nil {
+			c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
+			return
+		}
+		id, err := strconv.Atoi(c.Param("id"))
+		if err != nil {
+			c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
+			return
+		}
+		err = models.Edit(db, id, todo.Completed, todo.Body)
+		if err != nil {
+			c.JSON(http.StatusInternalServerError, gin.H{"error": err.Error()})
+			return
+		}
+		c.JSON(200, gin.H{
+			"result": "updated.",
+		})
+	})
+
+	// delete TODO.
+	router.DELETE("/todo/:id", func(c *gin.Context) {
+		id, err := strconv.Atoi(c.Param("id"))
+		if err != nil {
+			c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
+			return
+		}
+		err = models.Delete(db, id)
+		if err != nil {
+			c.JSON(http.StatusInternalServerError, gin.H{"error": err.Error()})
+			return
+		}
+		c.JSON(200, gin.H{
+			"result": "deleted.",
+		})
+	})
+
+	// listen.
 	router.Run(":3000")
+}
+
+func isValidRequest(todo TodoRequest) error {
+	if todo.Body == "" {
+		return errors.New("body required.")
+	}
+	return nil
+}
+
+func isValidId(id_str string) error {
+	_, err := strconv.Atoi(id_str)
+	if err != nil {
+		return errors.New("id invalid.")
+	}
+	return nil
 }
 
 func connectDb() *sqlx.DB {

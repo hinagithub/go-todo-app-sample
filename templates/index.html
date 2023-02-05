@@ -1,0 +1,60 @@
+{{template "header" .}}
+
+<!-- modal end -->
+<div class="row">
+  <div class="col"></div>
+  <div class="col-12">
+    <div class="card">
+      <img src="/assets/image/main.jpeg" class="img-fluid card-img-top" alt="..." />
+      <div class="card-body">
+        <div class="row">
+          <div class="col-12">
+            <h5 class="card-title">TODO sample</h5>
+          </div>
+          <div class="col-9">
+            <small><p class="card-text text-black-50">Go言語の勉強のために作ってみたTODOリスト</p></small>
+          </div>
+          <div class="col-3">
+            <button
+              id="add-btn"
+              type="button"
+              class="btn text-nowrap btn-sm text-decoration-underline"
+              onclick="showCreateModal()"
+            >
+              Add item
+            </button>
+          </div>
+        </div>
+      </div>
+      <ul class="list-group list-group-flush">
+        {{range $n, $item := .Data}}
+        <li class="list-group-item item-row">
+          <div class="row">
+            {{if $item.Completed}}
+            <div class="col-8 text-secondary" onclick="showEditModal('{{$item.ID}}', '{{$item.Body}}')">{{$item.Body}}</div>
+            <div class="col-3">
+            </div>
+            <div class="col-1 d-flex align-items-center" onclick="remove('{{$item.ID}}')">
+              <i class="fa fa-times" aria-hidden="true"></i>
+            </div>
+            {{else}}
+            <div class="col-8" onclick="showEditModal('{{$item.ID}}', '{{$item.Body}}')">{{$item.Body}}</div>
+            <div class="col-3">
+              <button class="btn text-nowrap btn-sm text-decoration-underline" type="submit" onclick="complete('{{$item.ID}}','{{$item.Body}}')">
+                complete
+              </button>
+            </div>
+            <div class="col-1 d-flex align-items-center" onclick="remove('{{$item.ID}}')">
+              <i class="fa fa-times" aria-hidden="true"></i>
+            </div>
+            {{end}}
+          </div>
+        </li>
+        {{end}}
+      </ul>
+
+    </div>
+  </div>
+  <div class="col"></div>
+</div>
+{{template "footer" .}}
